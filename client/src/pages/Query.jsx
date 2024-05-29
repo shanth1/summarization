@@ -1,9 +1,11 @@
+import { Box, Typography } from "@mui/material";
+
 const Query = () => {
 	return (
-		<div>
-			<h1>Query Page</h1>
-			<p>Query your data here.</p>
-		</div>
+		<Box p={2}>
+			<Typography variant="h4">Query Page</Typography>
+			<Typography>Query your data here.</Typography>
+		</Box>
 	);
 };
 

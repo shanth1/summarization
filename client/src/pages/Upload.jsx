@@ -1,9 +1,11 @@
+import { Box, Typography } from "@mui/material";
+
 const Upload = () => {
 	return (
-		<div>
-			<h1>Upload Page</h1>
-			<p>Upload your files here.</p>
-		</div>
+		<Box p={2}>
+			<Typography variant="h4">Upload Page</Typography>
+			<Typography>Upload your files here.</Typography>
+		</Box>
 	);
 };
 
