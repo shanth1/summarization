@@ -16,6 +16,7 @@ import {
 import { Send as SendIcon } from "@mui/icons-material";
 import HttpIcon from "@mui/icons-material/Http";
 import DocumentScannerIcon from "@mui/icons-material/DocumentScanner";
+import axios from "axios";
 
 const Upload = () => {
 	const [selectedOption, setSelectedOption] = useState("parsing");
@@ -25,7 +26,18 @@ const Upload = () => {
 	const [file, setFile] = useState(null);
 	const [content, setContent] = useState("");
 
-	const handleSubmit = () => {};
+	const handleSubmit = async () => {
+		const backendUrl = import.meta.env.VITE_BACKEND_URL;
+		const endpoint = "/collection";
+		try {
+			const response = await axios.post(`${backendUrl}${endpoint}`, {
+				content,
+			});
+			console.log(response.data);
+		} catch (err) {
+			console.error(err.message);
+		}
+	};
 
 	const handleOptionChange = (_, newOption) => {
 		if (newOption !== null) {
