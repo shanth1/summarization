@@ -6,17 +6,16 @@ import {
 	Routes,
 	Navigate,
 } from "react-router-dom";
-import Cookies from "js-cookie";
 import darkTheme from "./app/theme";
 import Navbar from "./widgets/Navbar";
 import Home from "./pages/Home";
 import Upload from "./pages/Upload";
 import Query from "./pages/Query";
 import Login from "./pages/Login";
+import { useAuth } from "./app/AuthContext";
 
 const App = () => {
-	const isAuthenticated = !!Cookies.get("authToken");
-	console.log("AUTH", isAuthenticated);
+	const { isAuthenticated } = useAuth();
 
 	return (
 		<ThemeProvider theme={darkTheme}>

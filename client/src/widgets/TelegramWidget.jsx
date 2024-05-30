@@ -1,15 +1,35 @@
-import Cookies from "js-cookie";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import axios from "axios";
+import { useAuth } from "../app/AuthContext";
 
 const TelegramWidget = () => {
+	const telegramButtonRef = useRef(null);
+	const { login } = useAuth();
+
 	useEffect(() => {
-		window.onTelegramAuth = (user) => {
-			Cookies.set("authToken", user.id, {
-				sameSite: "None",
-				secure: true,
-			});
-			alert(
-				`Logged in as ${user.first_name} ${user.last_name} (${user.id}${user.username ? ", @" + user.username : ""})`,
+		window.onTelegramAuth = async (user) => {
+			const backendUrl = import.meta.env.VITE_BACKEND_URL;
+			const endpoint = "/auth";
+			try {
+				const response = await axios.get(`${backendUrl}${endpoint}`, {
+					params: user,
+				});
+
+				if (response.status >= 200 && response.status < 300) {
+					const data = response.data;
+
+					console.log("Response data:", data);
+					login(data.token);
+				} else {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+			} catch (error) {
+				console.error("Error:", error);
+			}
+			console.log(
+				`Logged in as ${user.first_name} ${user.last_name} (${user.id}${
+					user.username ? `, @${user.username}` : ``
+				})`,
 			);
 		};
 
@@ -21,14 +41,10 @@ const TelegramWidget = () => {
 		script.setAttribute("data-onauth", "onTelegramAuth(user)");
 		script.setAttribute("data-request-access", "write");
 
-		document.body.appendChild(script);
-
-		return () => {
-			document.body.removeChild(script);
-		};
+		telegramButtonRef.current.appendChild(script);
 	}, []);
 
-	return <div id="telegram-login-button"></div>; // Контейнер для виджета
+	return <div ref={telegramButtonRef} id="telegram-login-button"></div>;
 };
 
 export default TelegramWidget;
