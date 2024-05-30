@@ -42,7 +42,7 @@ const TelegramWidget = () => {
 		script.setAttribute("data-request-access", "write");
 
 		telegramButtonRef.current.appendChild(script);
-	}, []);
+	});
 
 	return <div ref={telegramButtonRef} id="telegram-login-button"></div>;
 };
