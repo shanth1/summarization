@@ -1,4 +1,5 @@
 .venv
 .env
+mkdir letsencrypt
 pyrightconfig.json
 __pycache__
