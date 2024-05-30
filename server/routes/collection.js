@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const axios = require("axios");
 
 function splitText(text) {
 	const lines = text.split("\n").filter((line) => line.trim() !== "");
@@ -40,7 +41,6 @@ async function sendToSummarization(line) {
 			body: JSON.stringify({ content: line }),
 		});
 		const data = await response.json();
-		console.log(data);
 		return data.message.at(0).summary_text;
 	} catch (err) {
 		throw new Error(err.message);
@@ -48,16 +48,31 @@ async function sendToSummarization(line) {
 }
 
 router.post("/", async (req, res) => {
-	const { content } = req.body;
+	const { content, username } = req.body;
 
 	try {
 		const compressedLines = await Promise.all(
 			splitText(content).map((line) => sendToSummarization(line)),
 		);
 
+		await axios.post(
+			process.env.CHROMA_URL + "/collection",
+			{
+				profileId: username,
+				content: compressedLines.join("\n"),
+				knowledgeId: username,
+			},
+			{
+				headers: {
+					"x-api-key": process.env.CHROMA_API_KEY,
+				},
+			},
+		);
+
 		res.json({ message: compressedLines.join("\n") });
 	} catch (err) {
-		res.status(500).json({ message: "internal server error" });
+		console.error(err);
+		res.status(500).json({ message: err.message });
 	}
 });
 
