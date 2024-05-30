@@ -1,13 +1,37 @@
 import { useState } from "react";
-import { Box, Grid, Button, TextField, Typography } from "@mui/material";
+import axios from "axios";
+import {
+	Box,
+	Grid,
+	Button,
+	TextField,
+	Typography,
+	CircularProgress,
+} from "@mui/material";
 
 const Query = () => {
 	const [message, setMessage] = useState("");
 	const [submittedMessage, setSubmittedMessage] = useState("");
+	const [loading, setLoading] = useState(false);
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
-		setSubmittedMessage(message);
+		const backendUrl = import.meta.env.VITE_BACKEND_URL;
+		const endpoint = "/query";
+		const username = JSON.parse(localStorage.getItem("userData")).username;
+
+		setLoading(true);
+		try {
+			const response = await axios.post(`${backendUrl}${endpoint}`, {
+				username,
+				message,
+			});
+			setSubmittedMessage(response.data);
+		} catch (err) {
+			console.error(err.message);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -29,7 +53,7 @@ const Query = () => {
 							fullWidth
 							value={message}
 							onChange={(e) => setMessage(e.target.value)}
-							InputProps={{ style: { height: "56px" } }} // Устанавливаем высоту текстового поля
+							InputProps={{ style: { height: "56px" } }}
 						/>
 					</Grid>
 					<Grid item xs={12} md={2}>
@@ -38,7 +62,11 @@ const Query = () => {
 							variant="contained"
 							color="primary"
 							fullWidth
-							sx={{ height: "56px" }} // Устанавливаем высоту кнопки
+							disabled={loading}
+							sx={{ height: "56px" }}
+							startIcon={
+								loading && <CircularProgress size={20} />
+							}
 						>
 							Submit
 						</Button>
@@ -47,7 +75,7 @@ const Query = () => {
 			</form>
 			{submittedMessage && (
 				<Box mt={4}>
-					<Typography variant="h6">Submitted Message:</Typography>
+					<Typography variant="h6">Semantic answer:</Typography>
 					<Typography variant="body1" mt={2}>
 						{submittedMessage}
 					</Typography>
