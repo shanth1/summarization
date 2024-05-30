@@ -31,14 +31,17 @@ const Upload = () => {
 	const handleSubmit = async () => {
 		const backendUrl = import.meta.env.VITE_BACKEND_URL;
 		const endpoint = "/collection";
+
 		setLoading(true);
+		const username = JSON.parse(localStorage.getItem("userData")).username;
 		try {
 			const response = await axios.post(`${backendUrl}${endpoint}`, {
 				content,
+				username,
 			});
 			console.log(response.data);
 		} catch (err) {
-			console.error(err.message);
+			console.error(err);
 		} finally {
 			setLoading(false);
 		}
