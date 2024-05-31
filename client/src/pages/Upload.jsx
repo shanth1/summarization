@@ -12,10 +12,12 @@ import {
 	Select,
 	MenuItem,
 	Fab,
+	CircularProgress,
 } from "@mui/material";
 import { Send as SendIcon } from "@mui/icons-material";
 import HttpIcon from "@mui/icons-material/Http";
 import DocumentScannerIcon from "@mui/icons-material/DocumentScanner";
+import axios from "axios";
 
 const Upload = () => {
 	const [selectedOption, setSelectedOption] = useState("parsing");
@@ -24,8 +26,26 @@ const Upload = () => {
 	const [depth, setDepth] = useState(1);
 	const [file, setFile] = useState(null);
 	const [content, setContent] = useState("");
+	const [loading, setLoading] = useState(false);
 
-	const handleSubmit = () => {};
+	const handleSubmit = async () => {
+		const backendUrl = import.meta.env.VITE_BACKEND_URL;
+		const endpoint = "/collection";
+
+		setLoading(true);
+		const username = JSON.parse(localStorage.getItem("userData")).username;
+		try {
+			const response = await axios.post(`${backendUrl}${endpoint}`, {
+				content,
+				username,
+			});
+			console.log(response.data);
+		} catch (err) {
+			console.error(err);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	const handleOptionChange = (_, newOption) => {
 		if (newOption !== null) {
@@ -183,13 +203,14 @@ const Upload = () => {
 				color="success"
 				aria-label="submit"
 				onClick={handleSubmit}
+				disabled={loading}
 				sx={{
 					position: "fixed",
 					bottom: 32,
 					right: 32,
 				}}
 			>
-				<SendIcon />
+				{loading ? <CircularProgress size={20} /> : <SendIcon />}
 			</Fab>
 		</Box>
 	);
