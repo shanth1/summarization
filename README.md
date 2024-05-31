@@ -29,7 +29,7 @@ This project aims to provide a comprehensive solution for document summarization
 
 The architecture of the project is designed to be modular and scalable, utilizing microservices for different functionalities. Below is a high-level overview of the architecture:
 
-![Architecture Diagram](client/src/assets/architecture.png)
+![Architecture Diagram](client/public/assets/architecture.png)
 
 ## Example
 
@@ -42,7 +42,7 @@ Here is an example of how the system works:
 5. **Storage**: Embeddings are stored in the vector database.
 6. **Query**: The user queries the system to retrieve relevant fragments.
 
-![Example Workflow](client/src/assets/example.png)
+![Example Workflow](client/public/assets/example.png)
 
 ## Getting Started
 
