@@ -1,11 +1,19 @@
 import TelegramWidget from "../widgets/TelegramWidget";
+import { Box } from "@mui/material";
 
 const Login = () => {
 	return (
-		<div>
-			<h1>Welcome to my App</h1>
+		<Box
+			sx={{
+				height: "100vh",
+				display: "flex",
+				flexDirection: "column",
+				alignItems: "center",
+				justifyContent: "center",
+			}}
+		>
 			<TelegramWidget />
-		</div>
+		</Box>
 	);
 };
 

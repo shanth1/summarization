@@ -6,36 +6,34 @@ import {
 	Avatar,
 	Box,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
+import { useAuth } from "../app/AuthContext";
 
 const Navbar = () => {
-	const navigate = useNavigate();
-	const username = Cookies.get("username");
-	const avatarSrc = Cookies.get("avatarSrc");
+	const { logout, getUserData } = useAuth();
 
 	const handleLogout = () => {
-		Cookies.remove("authToken");
-		Cookies.remove("username");
-		Cookies.remove("avatarSrc");
-
-		navigate("/login");
+		logout();
 	};
 
 	return (
 		<AppBar position="static">
 			<Toolbar>
 				<Box display="flex" alignItems="center" flexGrow={1}>
-					{avatarSrc && (
+					{getUserData().first_name && (
 						<Avatar
-							src={avatarSrc}
-							alt={username}
+							src={getUserData().photo_url}
+							alt="#"
 							sx={{ marginRight: 2 }}
 						/>
 					)}
 					<Typography variant="h6">
-						{username ? `Hello, ${username}` : "Welcome"}
-					</Typography>
+						{getUserData().first_name
+							? `${getUserData().first_name}`
+							: getUserData().username
+								? getUserData().username
+								: "Unknown"}
+					</Typography>{" "}
 				</Box>
 				<Button color="inherit" component={Link} to="/">
 					Home
