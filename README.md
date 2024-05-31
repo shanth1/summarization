@@ -54,8 +54,8 @@ Here is an example of how the system works:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/your-repo.git
-   cd your-repo
+   git clone https://github.com/shanth1/summarization
+   cd summarization
    ```
 
 2. Set up environment variables:
